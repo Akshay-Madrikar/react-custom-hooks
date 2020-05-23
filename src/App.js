@@ -1,23 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState, useEffect} from 'react';
 import './App.css';
+import useCustomFetch from './hooks/useCustomFetch';
 
 function App() {
+  const[url, setUrl] = useState(null);
+
+  const [data, error, loading] = useCustomFetch(url);
+  function getFollowers(e) {
+    if(e.key === 'Enter'){
+      setUrl('https://api.github.com/users/' + e.target.value);
+    }
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h2>
+           GitID:
+           <input onKeyPress={getFollowers}></input>
+           { loading && url && <div>Loading...</div> }
+            { !loading && <div>{ data.bio }</div> }
+            { error && <div>Error : {error.message}</div> }
+        </h2>
       </header>
     </div>
   );
